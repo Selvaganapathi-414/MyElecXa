@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ElecXaApplication {
+public class ElecXaMVCApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ElecXaApplication.class, args);
+		SpringApplication.run(ElecXaMVCApplication.class, args);
 	}
 
 }
