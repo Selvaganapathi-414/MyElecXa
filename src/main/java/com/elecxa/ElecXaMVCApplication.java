@@ -8,7 +8,6 @@ public class ElecXaMVCApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ElecXaMVCApplication.class, args);
-		System.out.println("Hello Spring");
 	}
 
 }
