@@ -1,6 +1,6 @@
 package com.elecxa.service;
 
-import com.elecxa.Model.User;
+import com.elecxa.model.User;
 import com.elecxa.repository.UserRepository;
 import org.springframework.stereotype.Service;
 

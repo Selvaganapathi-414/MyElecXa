@@ -1,4 +1,4 @@
-package com.elecxa.Model;
+package com.elecxa.model;
 
 public enum RoleType {
     ADMIN, CUSTOMER;

@@ -1,7 +1,7 @@
 package com.elecxa.service;
 
-import com.elecxa.Model.Payment;
-import com.elecxa.Model.PaymentMode;
+import com.elecxa.model.Payment;
+import com.elecxa.model.PaymentMode;
 import com.elecxa.repository.PaymentRepository;
 import org.springframework.stereotype.Service;
 

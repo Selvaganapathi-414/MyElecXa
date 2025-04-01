@@ -1,4 +1,4 @@
-package com.elecxa.Model;
+package com.elecxa.model;
 
 
 import java.math.BigDecimal;

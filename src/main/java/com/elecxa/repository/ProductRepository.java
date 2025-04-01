@@ -1,9 +1,9 @@
 package com.elecxa.repository;
 
-import com.elecxa.Model.Product;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.elecxa.model.Product;
 
 import java.math.BigDecimal;
 import java.util.List;
