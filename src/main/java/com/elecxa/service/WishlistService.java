@@ -1,7 +1,7 @@
 package com.elecxa.service;
 
-import com.elecxa.Model.Product;
-import com.elecxa.Model.Wishlist;
+import com.elecxa.model.Product;
+import com.elecxa.model.Wishlist;
 import com.elecxa.repository.ProductRepository;
 import com.elecxa.repository.WishlistRepository;
 import org.springframework.stereotype.Service;

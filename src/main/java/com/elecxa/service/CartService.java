@@ -1,9 +1,8 @@
 package com.elecxa.service;
 
-import com.elecxa.Model.Cart;
-import com.elecxa.Model.CartItem;
-
-import com.elecxa.Model.Product;
+import com.elecxa.model.Cart;
+import com.elecxa.model.CartItem;
+import com.elecxa.model.Product;
 import com.elecxa.repository.CartRepository;
 import com.elecxa.repository.ProductRepository;
 

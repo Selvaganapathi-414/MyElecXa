@@ -1,6 +1,6 @@
 package com.elecxa.controller;
 
-import com.elecxa.Model.User;
+import com.elecxa.model.User;
 import com.elecxa.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
