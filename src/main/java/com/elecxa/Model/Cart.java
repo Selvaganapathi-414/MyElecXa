@@ -1,37 +1,30 @@
 package com.elecxa.Model;
 
-
 import jakarta.persistence.*;
 import lombok.*;
-import java.math.BigDecimal;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "Cart")
-@Data
+@Table(name = "cart")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Cart {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    @Column(nullable = false)
-    private Integer productQuantity;
-
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal discountedPrice;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ProductAvailabilityStatus productAvailabilityStatus;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItem> cartItems;
 }
-

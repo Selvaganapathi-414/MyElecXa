@@ -20,6 +20,3 @@ public class Role {
     private RoleType roleName;
 }
 
-enum RoleType {
-    ADMIN, CUSTOMER;
-}
