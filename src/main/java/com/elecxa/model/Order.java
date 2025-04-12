@@ -42,7 +42,3 @@ public class Order {
         orderedDate = LocalDateTime.now();
     }
 }
-
-enum OrderStatus {
-    FAILED, SUCCESS, PENDING
-}
