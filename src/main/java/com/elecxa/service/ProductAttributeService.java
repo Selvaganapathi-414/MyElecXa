@@ -6,44 +6,55 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductAttributeService {
 
     @Autowired
-    private ProductAttributeRepository productAttributeRepository;
+    private ProductAttributeRepository repository;
 
-    // Method to get all product attributes
-    public List<ProductAttribute> getAllProductAttributes() {
-        return productAttributeRepository.findAll();
+    public ProductAttribute create(ProductAttribute attribute) {
+        return repository.save(attribute);
     }
 
-    // Method to get a product attribute by its ID
-    public Optional<ProductAttribute> getProductAttributeById(Long id) {
-        return productAttributeRepository.findById(id);
+    public List<ProductAttribute> getAll() {
+        return repository.findAll();
     }
 
-    // Method to create a new product attribute
-    public ProductAttribute createProductAttribute(ProductAttribute productAttribute) {
-        return productAttributeRepository.save(productAttribute);
+    public ProductAttribute getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Attribute not found"));
     }
 
-    // Method to update a product attribute
-    public ProductAttribute updateProductAttribute(Long id, ProductAttribute productAttributeDetails) {
-        Optional<ProductAttribute> productAttributeOptional = productAttributeRepository.findById(id);
-        if (productAttributeOptional.isPresent()) {
-            ProductAttribute productAttribute = productAttributeOptional.get();
-            productAttribute.setAttributeName(productAttributeDetails.getAttributeName());
-            productAttribute.setAttributeValue(productAttributeDetails.getAttributeValue());
-            productAttribute.setProduct(productAttributeDetails.getProduct());
-            return productAttributeRepository.save(productAttribute);
-        }
-        return null; // Or throw an exception
+    public ProductAttribute update(Long id, ProductAttribute attribute) {
+        ProductAttribute existing = getById(id);
+        existing.setAttributeName(attribute.getAttributeName());
+        existing.setAttributeValue(attribute.getAttributeValue());
+        existing.setProduct(attribute.getProduct());
+        return repository.save(existing);
     }
 
-    // Method to delete a product attribute
-    public void deleteProductAttribute(Long id) {
-        productAttributeRepository.deleteById(id);
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
+
+    public List<ProductAttribute> getByProductId(Long productId) {
+        return repository.findByProduct_ProductId(productId);
+    }
+
+    public List<ProductAttribute> searchByName(String name) {
+        return repository.findByAttributeNameContainingIgnoreCase(name);
+    }
+
+    public List<ProductAttribute> searchByValue(String value) {
+        return repository.findByAttributeValueContainingIgnoreCase(value);
+    }
+
+    public List<ProductAttribute> bulkAdd(List<ProductAttribute> attributes) {
+        return repository.saveAll(attributes);
+    }
+
+    public Long count() {
+        return repository.count();
     }
 }

@@ -33,10 +33,7 @@ public class WishlistService {
         return wishlistRepository.save(wishlist);
     }
 
-    public void removeFromWishlist(Long productId) {
-        Optional<Wishlist> wishlistItem = wishlistRepository.findByProductId(productId);
-        wishlistItem.ifPresent(wishlistRepository::delete);
-    }
+  
 
     public List<Wishlist> getWishlist() {
         return wishlistRepository.findAll();

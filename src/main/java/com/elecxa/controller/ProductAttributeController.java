@@ -3,46 +3,76 @@ package com.elecxa.controller;
 import com.elecxa.model.ProductAttribute;
 import com.elecxa.service.ProductAttributeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/product-attributes")
+@RequestMapping("/api/attributes")
 public class ProductAttributeController {
 
     @Autowired
     private ProductAttributeService productAttributeService;
 
-    @GetMapping
-    public List<ProductAttribute> getAllProductAttributes() {
-        return productAttributeService.getAllProductAttributes();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductAttribute> getProductAttributeById(@PathVariable Long id) {
-        Optional<ProductAttribute> productAttribute = productAttributeService.getProductAttributeById(id);
-        return productAttribute.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
+    // 1. Create a product attribute
     @PostMapping
-    public ResponseEntity<ProductAttribute> createProductAttribute(@RequestBody ProductAttribute productAttribute) {
-        ProductAttribute createdProductAttribute = productAttributeService.createProductAttribute(productAttribute);
-        return new ResponseEntity<>(createdProductAttribute, HttpStatus.CREATED);
+    public ResponseEntity<ProductAttribute> create(@RequestBody ProductAttribute attribute) {
+        return ResponseEntity.ok(productAttributeService.create(attribute));
     }
 
+    // 2. Get all attributes
+    @GetMapping
+    public ResponseEntity<List<ProductAttribute>> getAll() {
+        return ResponseEntity.ok(productAttributeService.getAll());
+    }
+
+    // 3. Get attribute by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductAttribute> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(productAttributeService.getById(id));
+    }
+
+    // 4. Update attribute
     @PutMapping("/{id}")
-    public ResponseEntity<ProductAttribute> updateProductAttribute(@PathVariable Long id, @RequestBody ProductAttribute productAttribute) {
-        ProductAttribute updatedProductAttribute = productAttributeService.updateProductAttribute(id, productAttribute);
-        return updatedProductAttribute != null ? ResponseEntity.ok(updatedProductAttribute) : ResponseEntity.notFound().build();
+    public ResponseEntity<ProductAttribute> update(@PathVariable Long id, @RequestBody ProductAttribute attribute) {
+        return ResponseEntity.ok(productAttributeService.update(id, attribute));
     }
 
+    // 5. Delete attribute
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProductAttribute(@PathVariable Long id) {
-        productAttributeService.deleteProductAttribute(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        productAttributeService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // 6. Get all attributes by product ID
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<List<ProductAttribute>> getByProduct(@PathVariable Long productId) {
+        return ResponseEntity.ok(productAttributeService.getByProductId(productId));
+    }
+
+    // 7. Search attribute by name
+    @GetMapping("/search/name")
+    public ResponseEntity<List<ProductAttribute>> searchByName(@RequestParam String name) {
+        return ResponseEntity.ok(productAttributeService.searchByName(name));
+    }
+
+    // 8. Search attribute by value
+    @GetMapping("/search/value")
+    public ResponseEntity<List<ProductAttribute>> searchByValue(@RequestParam String value) {
+        return ResponseEntity.ok(productAttributeService.searchByValue(value));
+    }
+
+    // 9. Bulk add attributes
+    @PostMapping("/bulk")
+    public ResponseEntity<List<ProductAttribute>> bulkAdd(@RequestBody List<ProductAttribute> attributes) {
+        return ResponseEntity.ok(productAttributeService.bulkAdd(attributes));
+    }
+
+    // 10. Count total attributes
+    @GetMapping("/count")
+    public ResponseEntity<Long> count() {
+        return ResponseEntity.ok(productAttributeService.count());
     }
 }
