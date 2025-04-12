@@ -1,9 +1,10 @@
 package com.elecxa.service;
 
 import com.elecxa.model.Product;
+import com.elecxa.model.User;
 import com.elecxa.model.Wishlist;
-import com.elecxa.repository.ProductRepository;
 import com.elecxa.repository.WishlistRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,30 +13,38 @@ import java.util.Optional;
 @Service
 public class WishlistService {
 
-    private final WishlistRepository wishlistRepository;
-    private final ProductRepository productRepository;
+    @Autowired
+    private WishlistRepository wishlistRepository;
 
-    public WishlistService(WishlistRepository wishlistRepository, ProductRepository productRepository) {
-        this.wishlistRepository = wishlistRepository;
-        this.productRepository = productRepository;
+    public List<Wishlist> getWishlistByUser(User user) {
+        return wishlistRepository.findByUser(user);
     }
 
-    public Wishlist addToWishlist(Long productId) {
-        Optional<Product> productOptional = productRepository.findById(productId);
-        if (productOptional.isEmpty()) {
-            throw new RuntimeException("Product not found");
-        }
+    public Optional<Wishlist> getWishlistItem(User user, Product product) {
+        return wishlistRepository.findByUserAndProduct(user, product);
+    }
 
-        Product product = productOptional.get();
-        Wishlist wishlist = new Wishlist();
-        wishlist.setProduct(product);
+    public boolean isProductInWishlist(User user, Product product) {
+        return wishlistRepository.existsByUserAndProduct(user, product);
+    }
 
+    public Wishlist addToWishlist(Wishlist wishlist) {
         return wishlistRepository.save(wishlist);
     }
 
-  
+    public void removeFromWishlist(User user, Product product) {
+        wishlistRepository.deleteByUserAndProduct(user, product);
+    }
 
-    public List<Wishlist> getWishlist() {
+    public void deleteWishlistItem(Long wishlistId) {
+        wishlistRepository.deleteById(wishlistId);
+    }
+
+    public List<Wishlist> getAllWishlistItems() {
         return wishlistRepository.findAll();
+    }
+
+    public Optional<Wishlist> getWishlistById(Long id) {
+        return wishlistRepository.findById(id);
     }
 }
