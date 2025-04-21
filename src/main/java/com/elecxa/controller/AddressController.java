@@ -28,8 +28,8 @@ public class AddressController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<Address> getAddressesByUser(@PathVariable("userId") User user) {
-        return addressService.getAddressesByUser(user);
+    public Address getAddressesByUser(@PathVariable("userId") User user) {
+        return addressService.getAddressesByUser(user).get(0);
     }
 
     @PostMapping
@@ -37,9 +37,9 @@ public class AddressController {
         return addressService.createAddress(address);
     }
 
-    @PutMapping
-    public Address updateAddress(@RequestBody Address address) {
-        return addressService.updateAddress(address);
+    @PutMapping("update/{id}")
+    public Address updateAddress(@RequestBody Address address ,@PathVariable int id) {
+        return addressService.updateAddress(address , id);
     }
 
     @DeleteMapping("/{id}")
