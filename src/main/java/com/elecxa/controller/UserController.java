@@ -2,49 +2,81 @@ package com.elecxa.controller;
 
 import com.elecxa.model.User;
 import com.elecxa.service.UserService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
 
+    // Constructor Injection
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @PostMapping("/create")
+    // 1. Create a new user
+    @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
-        return ResponseEntity.status(201).body(createdUser);
+        return ResponseEntity.ok(userService.createUser(user));
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
-        Optional<User> user = userService.getUserById(userId);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/all")
+    // 2. Get all users
+    @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User userDetails) {
-        Optional<User> updatedUser = userService.updateUser(userId, userDetails);
-        return updatedUser.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    // 3. Get user by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
-        boolean isDeleted = userService.deleteUser(userId);
-        return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    // 4. Update user by ID
+    @PutMapping("update/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+        return ResponseEntity.ok(userService.updateUser(id, user));
+    }
+
+    // 5. Delete user by ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok("User deleted successfully");
+    }
+
+    // 6. Get user by email
+    @GetMapping("/email/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(userService.getUserByEmail(email));
+    }
+
+    // 7. Get user by phone number
+    @GetMapping("/phone/{phone}")
+    public ResponseEntity<User> getUserByPhone(@PathVariable String phone) {
+        return ResponseEntity.ok(userService.getUserByPhoneNumber(phone));
+    }
+
+    // 8. Change user's role
+    @PutMapping("/{id}/role/{roleId}")
+    public ResponseEntity<User> changeUserRole(@PathVariable Long id, @PathVariable Long roleId) {
+        return ResponseEntity.ok(userService.changeUserRole(id, roleId));
+    }
+
+    // 9. Get users by role name
+    @GetMapping("/role/{roleName}")
+    public ResponseEntity<List<User>> getUsersByRole(@PathVariable String roleName) {
+        return ResponseEntity.ok(userService.getUsersByRole(roleName));
+    }
+
+    // 10. Get users created after a specific date
+    @GetMapping("/created-after")
+    public ResponseEntity<List<User>> getUsersCreatedAfter(@RequestParam String dateTime) {
+        return ResponseEntity.ok(userService.getUsersCreatedAfter(dateTime));
     }
 }

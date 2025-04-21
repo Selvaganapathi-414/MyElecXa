@@ -62,4 +62,9 @@ public class ProductService {
     public List<Product> bulkAdd(List<Product> products) {
         return productRepository.saveAll(products);
     }
+
+	public List<Product> getProductsByCategory(Long categoryId) {
+		List<Product> products = productRepository.findBySubcategory_Category_CategoryId(categoryId);
+        return products;
+	}
 }
