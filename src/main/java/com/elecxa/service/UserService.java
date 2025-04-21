@@ -76,4 +76,9 @@ public class UserService {
         LocalDateTime time = LocalDateTime.parse(dateTime);
         return userRepository.findByAccountCreationDateAfter(time);
     }
+
+	public boolean isUserExists(String credential) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
