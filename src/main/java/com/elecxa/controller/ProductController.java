@@ -75,4 +75,10 @@ public class ProductController {
     public ResponseEntity<List<Product>> bulkAdd(@RequestBody List<Product> products) {
         return ResponseEntity.ok(productService.bulkAdd(products));
     }
+    
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable Long categoryId) {
+        List<Product> products = productService.getProductsByCategory(categoryId);
+        return ResponseEntity.ok(products);
+    }
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/users")
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     // 4. Update user by ID
-    @PutMapping("/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
         return ResponseEntity.ok(userService.updateUser(id, user));
     }
