@@ -5,6 +5,7 @@ import com.elecxa.model.CartItem;
 import com.elecxa.model.Product;
 import com.elecxa.model.User;
 import com.elecxa.repository.CartRepository;
+import com.elecxa.repository.ProductRepository;
 import com.elecxa.repository.UserRepository;
 import com.elecxa.repository.CartItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class CartService {
 
     @Autowired
     private CartRepository cartRepository;
+    
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -34,18 +38,18 @@ public class CartService {
     }
 
     // Add an item to the cart
-    public void addItemToCart(Long cartId, Long productId, int quantity, BigDecimal price) {
-        Optional<Cart> cartOptional = cartRepository.findById(cartId);
+    public void addItemToCart(Long productId ,Long userId) {
+    	Product product = productRepository.findById(productId).get();
+    	User user = userRepository.findById(userId).get();
+
+        Optional<Cart> cartOptional = cartRepository.findByUser(user);
         if (cartOptional.isPresent()) {
             Cart cart = cartOptional.get();
             CartItem cartItem = new CartItem();
             cartItem.setCart(cart);
-            cartItem.setQuantity(quantity);
-            cartItem.setPrice(price);
+            cartItem.setQuantity(1);
+            cartItem.setPrice(product.getPrice());
             
-            // Add product information (for example)
-            Product product = new Product();  // This should be fetched from the database based on the productId
-            product.setProductId(productId);  // Fetch product details properly
             cartItem.setProduct(product);
 
             cart.getCartItems().add(cartItem);  // Add item to cart

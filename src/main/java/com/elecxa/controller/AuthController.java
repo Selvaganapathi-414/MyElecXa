@@ -3,11 +3,16 @@ package com.elecxa.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.elecxa.model.Role;
+import com.elecxa.model.RoleType;
 import com.elecxa.model.User;
 import com.elecxa.service.UserService;
 
@@ -19,6 +24,9 @@ public class AuthController {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired 
+	PasswordEncoder passwordEncoder;
 
 	@GetMapping("/auth/login/{credential}")
 	public ResponseEntity<?> isUserExists(@PathVariable String credential) {
@@ -40,6 +48,18 @@ public class AuthController {
 	    }
 	}
 	
+	 @PostMapping("/auth/createuser")
+	    public ResponseEntity<User> createUser(@RequestBody User user) {
+		    Role role = new Role();
+		    role.setRoleId(2L);
+		    role.setRoleName(RoleType.CUSTOMER);
+		    user.setRole(role);
+		    
+		    String encodedPassword = passwordEncoder.encode(user.getPassword()); // ✅ Hashing here
+		    user.setPassword(encodedPassword);
+	        return ResponseEntity.ok(userService.createUser(user));
+	    }
+	
 	
 	@GetMapping("/auth/password/{credential}/{passwordInput}")
 	public ResponseEntity<?> isValidPassword(@PathVariable String credential , @PathVariable String passwordInput) {
@@ -47,7 +67,7 @@ public class AuthController {
 
 	    	User user = userService.getUserByEmail(credential);
 	    	
-	    	if(user.getPassword().equals(passwordInput)) {
+	    	if(passwordEncoder.matches( passwordInput , user.getPassword() )) {
 		        return ResponseEntity.ok(user);
 	    	}
 	    	else {
@@ -58,7 +78,7 @@ public class AuthController {
 	    catch (EntityNotFoundException exByEmail) {
 	        	User user = userService.getUserByPhoneNumber(credential);
 	        	System.out.println(user.getPassword());
-	        	if(user.getPassword().equals(passwordInput)) {
+	        	if(passwordEncoder.matches( passwordInput , user.getPassword() )) {
 			        return ResponseEntity.ok(user);
 		    	}
 		    	else {

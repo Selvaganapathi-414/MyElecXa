@@ -19,20 +19,20 @@ public class User {
     @Column(nullable = false, length = 50)
     private String firstName;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = true, length = 50)
     private String lastName;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = true, unique = false, length = 100)
     private String email;
 
-    @Column(nullable = false, unique = true, length = 15)
+    @Column(nullable = true, unique = false, length = 15)
     private String phoneNumber;
 
     @Column(nullable = false)
     private String password;
 
     @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
+    @JoinColumn(name = "role_id", nullable = true)
     private Role role;
 
     @Column(nullable = false)

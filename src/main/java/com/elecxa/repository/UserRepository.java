@@ -18,4 +18,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByRole_RoleName(String roleName);
 
     List<User> findByAccountCreationDateAfter(LocalDateTime dateTime);
+
+	Optional<User> findByFirstName(String username);
 }
