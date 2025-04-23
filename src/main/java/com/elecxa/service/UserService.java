@@ -1,7 +1,11 @@
 package com.elecxa.service;
 
+import com.elecxa.model.Address;
+import com.elecxa.model.Cart;
 import com.elecxa.model.Role;
 import com.elecxa.model.User;
+import com.elecxa.repository.AddressRepository;
+import com.elecxa.repository.CartRepository;
 import com.elecxa.repository.RoleRepository;
 import com.elecxa.repository.UserRepository;
 
@@ -16,14 +20,28 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final AddressRepository addressRepository;
+    private final CartRepository cartRepository;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+
+
+    public UserService(UserRepository userRepository, RoleRepository roleRepository , AddressRepository addressRepository ,CartRepository cartRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.addressRepository = addressRepository;
+        this.cartRepository  = cartRepository;
     }
 
     public User createUser(User user) {
-        return userRepository.save(user);
+    	User users = userRepository.save(user);
+    	Address address = new Address();
+    	address.setUser(users);
+    	addressRepository.save(address);
+    	Cart cart = new Cart();
+    	cart.setUser(users);
+    	cartRepository.save(cart);
+    	
+        return users;
     }
 
     public List<User> getAllUsers() {
@@ -41,8 +59,6 @@ public class UserService {
         existingUser.setLastName(updatedUser.getLastName());
         existingUser.setEmail(updatedUser.getEmail());
         existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
-        existingUser.setPassword(updatedUser.getPassword());
-        existingUser.setRole(updatedUser.getRole());
         return userRepository.save(existingUser);
     }
 

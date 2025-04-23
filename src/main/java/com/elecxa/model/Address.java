@@ -19,22 +19,22 @@ public class Address {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = true, length = 100)
     private String city;
 
-    @Column(nullable = false, length = 6)
+    @Column(nullable = true, length = 6)
     private String pincode;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = true, length = 255)
     private String doorNoStreetName;
 
     @Column(length = 255)
     private String landmark;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = true, length = 100)
     private String district;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = true, length = 100)
     private String state;
 }
 

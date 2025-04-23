@@ -35,9 +35,9 @@ public class CartController {
     }
 
     // Add an item to the cart
-    @PostMapping("/add/{cartId}")
-    public void addItemToCart(@PathVariable Long cartId, @RequestParam Long productId, @RequestParam int quantity, @RequestParam BigDecimal price) {
-        cartService.addItemToCart(cartId, productId, quantity, price);
+    @PostMapping("add/{productId}/{userId}")
+    public void addItemToCart(@PathVariable Long productId , @PathVariable Long userId) {
+        cartService.addItemToCart(productId , userId);
     }
 
     // Update the quantity of an item

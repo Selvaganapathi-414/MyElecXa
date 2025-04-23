@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
+@CrossOrigin("*")
 public class UserController {
 
     private final UserService userService;
@@ -19,11 +20,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    // 1. Create a new user
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
-    }
 
     // 2. Get all users
     @GetMapping
