@@ -42,7 +42,11 @@ public class Product {
 
     private Double rating;
 
-    private Integer warranty; // in months
+    private Integer warranty; 
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonIgnore
