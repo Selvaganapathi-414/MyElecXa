@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 package com.elecxa.repository;
 
 import com.elecxa.model.Order;
@@ -26,8 +26,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findTop5ByUserOrderByOrderedDateDesc(User user);
 
     List<Order> findByUserAndOrderStatus(User user, OrderStatus status);
+    
 }
-=======
 //package com.elecxa.repository;
 //
 //import com.elecxa.model.Order;
@@ -56,4 +56,4 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 //    BigDecimal calculateTotalRevenue();
 //
 //}
->>>>>>> a3f1030bb69eb9c399759d6be901e67672550939
+
