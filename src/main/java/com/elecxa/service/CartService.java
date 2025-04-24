@@ -68,7 +68,7 @@ public class CartService {
             if ("increase".equals(action)) {
                 cartItem.setQuantity(cartItem.getQuantity() + 1);
             } else if ("decrease".equals(action) && cartItem.getQuantity() > 1) {
-                cartItem.setQuantity(cartItem.getQuantity() - 1);
+                cartItem.setQuantity(cartItem.getQuantity() == 0  ? 0 : cartItem.getQuantity() - 1); 
             }
             cartItemRepository.save(cartItem);  // Save updated cart item
         });
