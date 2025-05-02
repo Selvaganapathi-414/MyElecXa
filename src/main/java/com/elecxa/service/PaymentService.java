@@ -74,9 +74,7 @@ public class PaymentService {
             orderRequest.put("receipt", UUID.randomUUID().toString());
             orderRequest.put("payment_capture", 1);
 
-            Order order = client.orders.create(orderRequest);
-
-            responseData.put("orderId", order.get("id"));
+        
             responseData.put("amount", amount);
             responseData.put("currency", "INR");
             responseData.put("razorpayKey", razorpayKey);

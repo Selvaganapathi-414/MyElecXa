@@ -1,5 +1,6 @@
 package com.elecxa.controller;
 
+import com.elecxa.model.Category;
 import com.elecxa.model.SubCategory;
 import com.elecxa.service.SubCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,21 @@ public class SubCategoryController {
     public ResponseEntity<SubCategory> getById(@PathVariable Long id) {
         return ResponseEntity.ok(subCategoryService.getById(id));
     }
+    
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<SubCategory>> getById(@PathVariable String category) {
+        return ResponseEntity.ok(subCategoryService.getSubCategoryByCategory(category));
+    }
+    
+    @GetMapping("/category/categoryId/{id}")
+    public ResponseEntity<SubCategory> getById(@PathVariable long id) {
+        return ResponseEntity.ok(subCategoryService.getCategoryBySubcategoryId(id));
+    }
+    
+    @GetMapping("/subcategory/{subcategoryName}")
+    public ResponseEntity<SubCategory> getBySubcategoryName(@PathVariable String subcategoryName) {
+        return ResponseEntity.ok(subCategoryService.searchByName(subcategoryName));
+    }
 
     // 4. Update subcategory
     @PutMapping("/{id}")
@@ -60,15 +76,11 @@ public class SubCategoryController {
 
     // 8. Search subcategories by name
     @GetMapping("/search")
-    public ResponseEntity<List<SubCategory>> searchByName(@RequestParam("keyword") String keyword) {
+    public ResponseEntity<SubCategory> searchByName(@RequestParam("keyword") String keyword) {
         return ResponseEntity.ok(subCategoryService.searchByName(keyword));
     }
 
-    // 9. Get all subcategories under a category
-    @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<SubCategory>> getByCategoryId(@PathVariable Long categoryId) {
-        return ResponseEntity.ok(subCategoryService.getByCategoryId(categoryId));
-    }
+ 
 
     // 10. Add multiple subcategories at once
     @PostMapping("/bulk")

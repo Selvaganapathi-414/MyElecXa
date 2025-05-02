@@ -34,7 +34,6 @@ public class OtpController {
     @PostMapping("/customer/otp/verify")
     public ResponseEntity<String> verifyOtp(@RequestParam String phoneNumber, @RequestParam String otp) {
         boolean isValid = otpService.verifyOtp(phoneNumber.trim(), otp);
-System.out.println(isValid);
         if (!isValid) {
             throw new InvalidOtpException("Invalid OTP or OTP Expired!");
         }

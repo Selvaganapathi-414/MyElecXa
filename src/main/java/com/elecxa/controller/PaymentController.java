@@ -1,11 +1,14 @@
 package com.elecxa.controller;
 
+import com.elecxa.model.Order;
 import com.elecxa.model.Payment;
+
 import com.elecxa.model.PaymentMode;
 import com.elecxa.model.PaymentStatus;
 import com.elecxa.model.User;
+import com.elecxa.service.OrderService;
 import com.elecxa.service.PaymentService;
-import com.razorpay.Order;
+import com.elecxa.service.UserService;
 import com.razorpay.RazorpayClient;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 
 import jakarta.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +40,12 @@ public class PaymentController {
 
     @Autowired
     public PaymentService paymentService;
+    
+    @Autowired
+    public OrderService orderService;
+    
+    @Autowired
+    public UserService userService;
 
     public PaymentController(PaymentService paymentService) {
         this.paymentService = paymentService;
@@ -49,22 +59,23 @@ public class PaymentController {
 
     @PostMapping("/save")
     public String savePayment(
-            @RequestParam String paymentId,
             @RequestParam String razorpayOrderId,
-            @RequestParam String signature,
             @RequestParam BigDecimal amount,
-            HttpSession session
+            @RequestParam long userId,
+            @RequestParam long orderId
     ) {
-        Long userId = (Long) session.getAttribute("userId");
+        System.out.println(userId);
 
         Payment payment = new Payment();
-        payment.setPaymentRefId(paymentId);
+        payment.setPaymentRefId( razorpayOrderId);
         payment.setAmount(amount);
         payment.setPaymentStatus(PaymentStatus.SUCCESS);
         payment.setMode(PaymentMode.UPI);
-        User user = new User();
-        user.setUserId(userId);
-        payment.setUser(user); 
+        User user = userService.getUserById(userId);
+        payment.setUser(user);
+        Order order = orderService.getOrderById(orderId);
+        payment.setOrder(order);
+        payment.setProduct(order.getProduct());
 
         paymentService.savePayment(payment);
         return "Payment successful";

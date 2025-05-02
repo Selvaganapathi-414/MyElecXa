@@ -43,6 +43,10 @@ public class CategoryService {
     public boolean existsById(Long id) {
         return categoryRepository.existsById(id);
     }
+    
+    public Category getByName(String category) {
+        return categoryRepository.findByName(category);
+    }
 
     public long count() {
         return categoryRepository.count();

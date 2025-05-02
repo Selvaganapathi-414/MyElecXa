@@ -25,11 +25,9 @@ public class SubCategory {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    @JsonManagedReference
     private Category category;
 
     @OneToMany(mappedBy = "subcategory", cascade = CascadeType.ALL)
     @JsonIgnore
-
     private List<Product> products;
 }
