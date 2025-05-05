@@ -38,6 +38,7 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.PLACED);
         return orderRepository.save(order);
     }
+    
 
     public Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId).orElse(null);
@@ -67,9 +68,10 @@ public class OrderService {
             order.setOrderStatus(status);
             return orderRepository.save(order);
         }
+        
         return null;
     }
-
+   
     public void deleteOrder(Long orderId) {
         orderRepository.deleteById(orderId);
     }
@@ -96,4 +98,6 @@ public class OrderService {
     public List<Double> getRevenueChartData() {
         return orderRepository.findMonthlyRevenue(); // Ensure this is defined in repository
     }
+    
+
 }
