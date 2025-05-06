@@ -6,7 +6,6 @@ import com.elecxa.model.Product;
 import com.elecxa.repository.OrderRepository;
 import com.elecxa.repository.ProductRepository;
 import com.elecxa.repository.UserRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,6 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.PLACED);
         return orderRepository.save(order);
     }
-    
 
     public Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId).orElse(null);
@@ -53,12 +51,17 @@ public class OrderService {
     }
 
     public List<Order> getOrdersByProduct(Long productId) {
-    	Product product = productRepository.findById(productId).get();
+        Product product = productRepository.findById(productId).orElse(null);
         return orderRepository.findByProduct(product);
     }
 
     public List<Order> getOrdersBetweenDates(LocalDateTime start, LocalDateTime end) {
         return orderRepository.findByOrderedDateBetween(start, end);
+    }
+
+    // ✅ New method for combined filter
+    public List<Order> getOrdersByStatusAndDateRange(OrderStatus status, LocalDateTime start, LocalDateTime end) {
+        return orderRepository.findByOrderStatusAndOrderedDateBetween(status, start, end);
     }
 
     public Order updateOrderStatus(Long orderId, OrderStatus status) {
@@ -68,10 +71,9 @@ public class OrderService {
             order.setOrderStatus(status);
             return orderRepository.save(order);
         }
-        
         return null;
     }
-   
+
     public void deleteOrder(Long orderId) {
         orderRepository.deleteById(orderId);
     }
@@ -84,20 +86,15 @@ public class OrderService {
         return orderRepository.calculateTotalRevenue();
     }
 
-    // ✅ Add total order count
     public long getTotalOrderCount() {
         return orderRepository.count();
     }
 
-    // ✅ Add recent orders (latest 5 orders)
     public List<Order> getRecentOrders() {
         return orderRepository.findAll(PageRequest.of(0, 5)).getContent();
     }
 
-    // ✅ Add revenue chart data (dummy month-wise revenue, you can change this logic)
     public List<Double> getRevenueChartData() {
-        return orderRepository.findMonthlyRevenue(); // Ensure this is defined in repository
+        return orderRepository.findMonthlyRevenue();
     }
-    
-
 }
