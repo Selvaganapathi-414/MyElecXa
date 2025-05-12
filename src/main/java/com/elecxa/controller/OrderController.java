@@ -70,5 +70,5 @@ public class OrderController {
     public ResponseEntity<Order> placeOrder(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.cancelOrder(orderId));                                      
     }
-    
+
 }
