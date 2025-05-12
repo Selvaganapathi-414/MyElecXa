@@ -1,6 +1,7 @@
 package com.elecxa.service;
 
 
+import com.elecxa.model.CartItem;
 import com.elecxa.model.Order;
 import com.elecxa.model.OrderStatus;
 import com.elecxa.model.Product;
@@ -35,7 +36,28 @@ public class OrderService {
     @Autowired
     private ProductRepository productRepository;
 
-      public Order placeOrder(Long userId, Long productId, BigDecimal totalAmount) {
+    @Autowired
+    private CartService cartService;
+
+    
+      public Order placeOrder(Long userId, Long cartId, BigDecimal totalAmount, Long productId) {
+    	  
+    	if(productId == -1) {
+    		List<CartItem> products = cartService.getCartItems(cartId);
+    		Order returnorder = new Order() ;
+    		for(CartItem items : products) {
+    			Order order = new Order();
+    	        order.setUser(userRepository.findById(userId).orElse(null));
+    	        order.setProduct(productRepository.findById(items.getProduct().getProductId()).orElse(null));
+    	        order.setOrderedDate(LocalDateTime.now());
+    	        order.setExpectedDeliveryDate(LocalDateTime.now().plusDays(3));
+    	        BigDecimal price = items.getProduct().getPrice().subtract(((items.getProduct().getDiscount().divide(new BigDecimal(100)))).multiply(items.getProduct().getPrice()));
+    	        order.setTotalAmount(price);
+    	        order.setOrderStatus(OrderStatus.PLACED);
+    	        returnorder = orderRepository.save(order);
+    		}
+    		return returnorder;
+    	}
         Order order = new Order();
         order.setUser(userRepository.findById(userId).orElse(null));
         order.setProduct(productRepository.findById(productId).orElse(null));
@@ -100,13 +122,25 @@ public class OrderService {
 
     // ✅ Add recent orders (latest 5 orders)
     public List<Order> getRecentOrders() {
-        return orderRepository.findAll(PageRequest.of(0, 5)).getContent();
+        return orderRepository.findAll().reversed().subList(0, 10);
     }
 
     // ✅ Add revenue chart data (dummy month-wise revenue, you can change this logic)
     public List<Double> getRevenueChartData() {
         return orderRepository.findMonthlyRevenue(); // Ensure this is defined in repository
     }
+
+
+
+	public List<Order> getOrdersByUser(long customerId) {
+		return orderRepository.findByUser_UserId(customerId);
+	}
+
+	public Order cancelOrder(Long orderId) {
+		Order order = orderRepository.findById(orderId).get();
+		order.setOrderStatus(OrderStatus.CANCELLED);
+		return orderRepository.save(order);
+	}
 
 
 }

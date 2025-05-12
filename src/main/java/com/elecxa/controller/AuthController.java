@@ -58,7 +58,6 @@ public class AuthController {
 	@Autowired
 	UserService userService;
 
-    @PermitAll
 	@GetMapping("/auth/login/{credential}")
 	public ResponseEntity<?> isUserExists(@PathVariable String credential) {
 		try {

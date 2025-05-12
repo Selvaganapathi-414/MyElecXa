@@ -21,10 +21,9 @@ public class OrderController {
     @PostMapping("/place")
     public ResponseEntity<Order> placeOrder(@RequestParam Long userId,
                                             @RequestParam Long cartId,
-                                            @RequestParam BigDecimal totalAmount) {
-        return ResponseEntity.ok(orderService.placeOrder(userId, cartId, totalAmount));
-
-                                            
+                                            @RequestParam BigDecimal totalAmount,
+                                            @RequestParam Long productId) {
+        return ResponseEntity.ok(orderService.placeOrder(userId, cartId, totalAmount , productId));                                      
     }
 
     @GetMapping("/{orderId}")
@@ -47,10 +46,29 @@ public class OrderController {
     public ResponseEntity<List<Order>> getRecentOrders() {
         return ResponseEntity.ok(orderService.getRecentOrders());
     }
+    
+
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<List<Order>> getOrdersByUser(@PathVariable long customerId) {
+        return ResponseEntity.ok(orderService.getOrdersByUser(customerId));
+    }
+    
 
     @GetMapping("/revenue-data")
     public ResponseEntity<List<Double>> getRevenueChartData() {
         return ResponseEntity.ok(orderService.getRevenueChartData());
+    }
+    
+    @GetMapping("/total-revenue")
+    public ResponseEntity<BigDecimal> getTotalRevenue() {
+    	BigDecimal revenue = orderService.calculateTotalRevenue();
+    	revenue = revenue == null ? new BigDecimal(0) : revenue;
+        return ResponseEntity.ok(revenue);
+    }
+    
+    @PutMapping("/cancel/{orderId}")
+    public ResponseEntity<Order> placeOrder(@PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.cancelOrder(orderId));                                      
     }
     
 }

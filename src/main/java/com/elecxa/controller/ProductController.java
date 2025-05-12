@@ -40,9 +40,14 @@ public class ProductController {
     }
 
     // 3. Get product by ID
-    @GetMapping("/{id}")
+    @GetMapping("/info/{id}")
     public ResponseEntity<Product> getById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getById(id));
+    }
+    
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getProductCount() {
+        return ResponseEntity.ok(productService.getAll().size());
     }
 
     // 4. Update product
