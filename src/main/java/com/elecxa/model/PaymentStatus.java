@@ -1,6 +1,6 @@
 package com.elecxa.model;
 
 
-enum PaymentStatus {
+public enum PaymentStatus {
     SUCCESS, FAILED, PENDING
 }

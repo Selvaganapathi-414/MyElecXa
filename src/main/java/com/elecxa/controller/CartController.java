@@ -41,8 +41,8 @@ public class CartController {
     }
 
     // Update the quantity of an item
-    @PutMapping("/update/{itemId}")
-    public void updateItemQuantity(@PathVariable Long itemId, @RequestParam String action) {
+    @PutMapping("/update")
+    public void updateItemQuantity(@RequestParam Long itemId, @RequestParam String action) {
         cartService.updateItemQuantity(itemId, action);
     }
 

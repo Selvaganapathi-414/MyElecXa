@@ -1,5 +1,6 @@
 package com.elecxa.service;
 
+import com.elecxa.model.Category;
 import com.elecxa.model.SubCategory;
 import com.elecxa.repository.SubCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,9 @@ public class SubCategoryService {
         return subCategoryRepository.count();
     }
 
-    public List<SubCategory> searchByName(String keyword) {
-        return subCategoryRepository.findByNameContainingIgnoreCase(keyword);
+    public SubCategory searchByName(String keyword) {
+    	System.out.println("Hello " + subCategoryRepository.findByName(keyword));
+        return subCategoryRepository.findByName(keyword).get();
     }
 
     public List<SubCategory> getByCategoryId(Long categoryId) {
@@ -55,4 +57,13 @@ public class SubCategoryService {
     public List<SubCategory> bulkAdd(List<SubCategory> subCategories) {
         return subCategoryRepository.saveAll(subCategories);
     }
+
+	public List<SubCategory>  getSubCategoryByCategory(String category) {
+        return subCategoryRepository.findByCategory_Name(category);
+
+	}
+
+	public SubCategory getCategoryBySubcategoryId(long id) {
+		return subCategoryRepository.findById(id).get();
+	}
 }

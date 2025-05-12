@@ -1,20 +1,29 @@
 package com.elecxa.service;
 
+import com.elecxa.model.FiltersDTO;
 import com.elecxa.model.Product;
+import com.elecxa.model.ProductAttribute;
+import com.elecxa.repository.ProductAttributeRepository;
 import com.elecxa.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+    
+    @Autowired
+    ProductAttributeRepository productAttributeRepository;
 
     public Product create(Product product) {
-        return productRepository.save(product);
+    	Product prod = productRepository.save(product);
+    	System.out.println(product.getAttributes());
+        return prod;
     }
 
     public List<Product> getAll() {
@@ -31,10 +40,12 @@ public class ProductService {
         existing.setBrand(product.getBrand());
         existing.setDescription(product.getDescription());
         existing.setPrice(product.getPrice());
+        if(product.getImageUrl() != "") {
+        	existing.setImageUrl(product.getImageUrl());
+        }
+
         existing.setStockQuantity(product.getStockQuantity());
-        existing.setSubcategory(product.getSubcategory());
         existing.setDiscount(product.getDiscount());
-        existing.setRating(product.getRating());
         existing.setWarranty(product.getWarranty());
         return productRepository.save(existing);
     }
@@ -51,8 +62,8 @@ public class ProductService {
         return productRepository.findByNameContainingIgnoreCase(keyword);
     }
 
-    public List<Product> getLowStockProducts(int threshold) {
-        return productRepository.findByStockQuantityLessThan(threshold);
+    public List<Product> getPopularProducts() {
+        return productRepository.findProductsByFilters(null, 50.0, 5000.0, null, 4.8);
     }
 
     public List<Product> getByBrand(String brand) {
@@ -66,5 +77,20 @@ public class ProductService {
 	public List<Product> getProductsByCategory(Long categoryId) {
 		List<Product> products = productRepository.findBySubcategory_Category_CategoryId(categoryId);
         return products;
+	}
+
+	public List<Product> getProductByCategory(String category) {
+		List<Product> products = productRepository.findBySubcategory_Category_Name(category);
+        return products;
+	}
+
+	public List<Product> getProductBySubCategory(String subcategoryName) {
+		List<Product> products = productRepository.findBySubcategory_Name(subcategoryName);
+        return products;
+	}
+
+	public List<Product> getProductByFilters(String categoryName , FiltersDTO filters) {
+		
+		return productRepository.findProductsByFilters(categoryName , filters.getMin() , filters.getMax(),filters.getBrands().size() ==0 ?null : filters.getBrands() ,filters.getRating() );
 	}
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/attributes")
 public class ProductAttributeController {
 
@@ -34,9 +35,10 @@ public class ProductAttributeController {
     }
 
     // 4. Update attribute
-    @PutMapping("/{id}")
-    public ResponseEntity<ProductAttribute> update(@PathVariable Long id, @RequestBody ProductAttribute attribute) {
-        return ResponseEntity.ok(productAttributeService.update(id, attribute));
+    @PostMapping("/update/attributes/{productId}")
+    public ResponseEntity<String> update(@PathVariable Long productId, @RequestBody List<ProductAttribute> attribute) {
+    	productAttributeService.update(productId, attribute);
+        return ResponseEntity.ok("Successfully Updated");
     }
 
     // 5. Delete attribute

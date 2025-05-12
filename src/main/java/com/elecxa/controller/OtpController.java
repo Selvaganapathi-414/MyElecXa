@@ -19,7 +19,6 @@ public class OtpController {
         this.otpService = otpService;
     }
 
-	@PreAuthorize("hasAuthority('CUSTOMER')")
     @PostMapping("/customer/otp/send")
     public ResponseEntity<String> sendOtp(@RequestParam String phoneNumber) {
 		if(phoneNumber.contains("@")) {
@@ -30,11 +29,9 @@ public class OtpController {
         return ResponseEntity.ok(response);
     }
 
-	@PreAuthorize("hasAuthority('CUSTOMER')") 
     @PostMapping("/customer/otp/verify")
     public ResponseEntity<String> verifyOtp(@RequestParam String phoneNumber, @RequestParam String otp) {
         boolean isValid = otpService.verifyOtp(phoneNumber.trim(), otp);
-System.out.println(isValid);
         if (!isValid) {
             throw new InvalidOtpException("Invalid OTP or OTP Expired!");
         }

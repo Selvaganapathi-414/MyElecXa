@@ -26,6 +26,11 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
+    
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getAllUserCount() {
+        return ResponseEntity.ok(userService.getAllUsers().size());
+    }
 
     // 3. Get user by ID
     @GetMapping("/{id}")

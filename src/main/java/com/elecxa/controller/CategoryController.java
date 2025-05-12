@@ -4,6 +4,7 @@ import com.elecxa.model.Category;
 import com.elecxa.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,11 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
         return ResponseEntity.ok(categoryService.getById(id));
+    }
+    
+    @GetMapping("categoryName/{categoryName}")
+    public ResponseEntity<Category> getCategoryByName(@PathVariable String categoryName) {
+        return ResponseEntity.ok(categoryService.getByName(categoryName));
     }
 
     @PutMapping("/{id}")

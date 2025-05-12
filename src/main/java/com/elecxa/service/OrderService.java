@@ -1,8 +1,12 @@
 package com.elecxa.service;
 
+
+import com.elecxa.model.CartItem;
 import com.elecxa.model.Order;
 import com.elecxa.model.OrderStatus;
 import com.elecxa.model.Product;
+import com.elecxa.repository.CartItemRepository;
+
 import com.elecxa.repository.OrderRepository;
 import com.elecxa.repository.ProductRepository;
 import com.elecxa.repository.UserRepository;
@@ -13,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+
 import java.util.Optional;
 
 @Service
@@ -20,6 +25,9 @@ public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+    
+    @Autowired
+    private CartItemRepository cartitemRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -27,7 +35,28 @@ public class OrderService {
     @Autowired
     private ProductRepository productRepository;
 
-    public Order placeOrder(Long userId, Long productId, BigDecimal totalAmount) {
+    @Autowired
+    private CartService cartService;
+
+    
+      public Order placeOrder(Long userId, Long cartId, BigDecimal totalAmount, Long productId) {
+    	  
+    	if(productId == -1) {
+    		List<CartItem> products = cartService.getCartItems(cartId);
+    		Order returnorder = new Order() ;
+    		for(CartItem items : products) {
+    			Order order = new Order();
+    	        order.setUser(userRepository.findById(userId).orElse(null));
+    	        order.setProduct(productRepository.findById(items.getProduct().getProductId()).orElse(null));
+    	        order.setOrderedDate(LocalDateTime.now());
+    	        order.setExpectedDeliveryDate(LocalDateTime.now().plusDays(3));
+    	        BigDecimal price = items.getProduct().getPrice().subtract(((items.getProduct().getDiscount().divide(new BigDecimal(100)))).multiply(items.getProduct().getPrice()));
+    	        order.setTotalAmount(price);
+    	        order.setOrderStatus(OrderStatus.PLACED);
+    	        returnorder = orderRepository.save(order);
+    		}
+    		return returnorder;
+    	}
         Order order = new Order();
         order.setUser(userRepository.findById(userId).orElse(null));
         order.setProduct(productRepository.findById(productId).orElse(null));
@@ -49,6 +78,7 @@ public class OrderService {
     public List<Order> getOrdersByStatus(OrderStatus status) {
         return orderRepository.findByOrderStatus(status);
     }
+
 
     public List<Order> getOrdersByProduct(Long productId) {
         Product product = productRepository.findById(productId).orElse(null);
@@ -91,10 +121,20 @@ public class OrderService {
     }
 
     public List<Order> getRecentOrders() {
-        return orderRepository.findAll(PageRequest.of(0, 5)).getContent();
+        return orderRepository.findAll().reversed().subList(0, 10);
     }
 
     public List<Double> getRevenueChartData() {
         return orderRepository.findMonthlyRevenue();
     }
+
+	public List<Order> getOrdersByUser(long customerId) {
+		return orderRepository.findByUser_UserId(customerId);
+	}
+
+	public Order cancelOrder(Long orderId) {
+		Order order = orderRepository.findById(orderId).get();
+		order.setOrderStatus(OrderStatus.CANCELLED);
+		return orderRepository.save(order);
+	}
 }

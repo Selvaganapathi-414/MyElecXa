@@ -1,6 +1,7 @@
 package com.elecxa.controller;
 
 import com.elecxa.model.Order;
+
 import com.elecxa.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/orders")
 @CrossOrigin(origins = "http://localhost:8080")
-
 public class OrderController {
 
     @Autowired
@@ -20,9 +20,10 @@ public class OrderController {
 
     @PostMapping("/place")
     public ResponseEntity<Order> placeOrder(@RequestParam Long userId,
-                                            @RequestParam Long productId,
-                                            @RequestParam BigDecimal totalAmount) {
-        return ResponseEntity.ok(orderService.placeOrder(userId, productId, totalAmount));
+                                            @RequestParam Long cartId,
+                                            @RequestParam BigDecimal totalAmount,
+                                            @RequestParam Long productId) {
+        return ResponseEntity.ok(orderService.placeOrder(userId, cartId, totalAmount , productId));                                      
     }
 
     @GetMapping("/{orderId}")
@@ -45,9 +46,29 @@ public class OrderController {
     public ResponseEntity<List<Order>> getRecentOrders() {
         return ResponseEntity.ok(orderService.getRecentOrders());
     }
+    
+
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<List<Order>> getOrdersByUser(@PathVariable long customerId) {
+        return ResponseEntity.ok(orderService.getOrdersByUser(customerId));
+    }
+    
 
     @GetMapping("/revenue-data")
     public ResponseEntity<List<Double>> getRevenueChartData() {
         return ResponseEntity.ok(orderService.getRevenueChartData());
     }
+    
+    @GetMapping("/total-revenue")
+    public ResponseEntity<BigDecimal> getTotalRevenue() {
+    	BigDecimal revenue = orderService.calculateTotalRevenue();
+    	revenue = revenue == null ? new BigDecimal(0) : revenue;
+        return ResponseEntity.ok(revenue);
+    }
+    
+    @PutMapping("/cancel/{orderId}")
+    public ResponseEntity<Order> placeOrder(@PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.cancelOrder(orderId));                                      
+    }
+
 }

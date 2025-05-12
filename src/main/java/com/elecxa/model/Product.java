@@ -46,10 +46,7 @@ public class Product {
     @Column(name = "image_url")
     private String imageUrl;
 
-    
-
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonIgnore
-
     private List<ProductAttribute> attributes;
 }
